@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { useState } from 'react';
 
 import './App.css';
 
@@ -154,7 +154,8 @@ const GameBoard = () => {
     }
 
     const ResetGameBoard = () => {
-        setHistory(history => [...history, moves]);
+        setHistory(history => [...history, {winner: theWinner, board: moves}]);
+
         setMoves(Object.assign({}, freshBoard));
         setActivePlayer(defaultPlayer);
         setTurnNumber(1);
@@ -162,19 +163,40 @@ const GameBoard = () => {
     };
 
     const HistoryBoard = ({board}) => {
-        let result = [];
+        let rows = [];
         for (let i = 0; i < 3; i++) {
-            result.push(Object.values(board[i]).join(' '));
+            let cells = [];
+            for (let j = 0; j < 3; j++) {
+                cells.push(board[i][j] || '•');
+            }
+            rows.push(cells);
         }
-        return <ul>
-            {result.map((n, x) => {
-                return <li key={x} style={{'listStyle': 'none'}}>{n}</li>
+
+        return <table>
+            {rows.map((row, x) => {
+                return <tr>
+                    {row.map((cell, j) => {
+                        return <td key={j} style={{'listStyle': 'none', border: '1px solid', lineHeight: '13px'}}>{cell}</td>
+                    })}
+                </tr>
             })}
-        </ul>;
+        </table>;
     };
 
-    return <div className={'row'}>
-        <div className={'col-sm-12 col-md-4 offset-md-4'}>
+    return <div className={'row mt-5'}>
+        <div className={'col-sm-12 col-md-4'}>
+            <div className="card mx-5">
+                <div className="card-header">
+                    Stats
+                </div>
+                <div className="card-body">
+                    <h5 className="card-title">Player X</h5>
+                    <p>Win Percentage X: {history.length && parseInt(history.filter(n => n.winner === 'x').length / history.length * 100, 10) + '%'}</p>
+                    <p>Win Percentage O: {history.length && parseInt(history.filter(n => n.winner === 'o').length / history.length * 100, 10) + '%'}</p>
+                </div>
+            </div>
+        </div>
+        <div className={'col-sm-12 col-md-4'}>
             <div id={"gameboard"}>
                 <div className={'text-center'}>
                     {theWinner
@@ -201,16 +223,24 @@ const GameBoard = () => {
                 </div>
             </div>
             <div className={'text-center'}>
-                {theWinner && <button onClick={ResetGameBoard}>Reset</button>}
+                {theWinner && <button className="btn btn-primary" onClick={ResetGameBoard}>Reset</button>}
             </div>
         </div>
         <div className={'col-sm-12 col-md-4'}>
-            {history.map((board, i) => {
-                return <div key={i}>
-                    <h3>Game {i + 1}</h3>
-                    <HistoryBoard board={board}/>
+            <div className="card mx-5">
+                <div className="card-header">
+                    History
                 </div>
-            })}
+                <div className="card-body">
+                    {history.map((result, i) => {
+                        return <div key={i}>
+                            <h5 className="card-title">Game {i + 1} - Winner {result.winner.toUpperCase()}</h5>
+                            <HistoryBoard board={result.board}/>
+                        </div>
+                    })}
+                </div>
+            </div>
+
         </div>
     </div>;
 };
