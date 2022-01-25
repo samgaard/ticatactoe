@@ -195,11 +195,11 @@ const GameBoard = () => {
                     Stats
                 </div>
                 <div className="card-body">
-                    <h5 className="card-title">Player X</h5>
-                    <p>Win Percentage
-                        X: {history.length && parseInt(history.filter(n => n.winner === 'X').length / history.length * 100, 10) + '%'}</p>
-                    <p>Win Percentage
-                        O: {history.length && parseInt(history.filter(n => n.winner === 'O').length / history.length * 100, 10) + '%'}</p>
+                    <h5 className="card-title">Win Percentage</h5>
+                    <p>X: {history.length &&
+                        parseInt(history.filter(n => n.winner === 'X').length / history.length * 100, 10) + '%'}</p>
+                    <p>O: {history.length &&
+                        parseInt(history.filter(n => n.winner === 'O').length / history.length * 100, 10) + '%'}</p>
                 </div>
             </div>
         </div>
