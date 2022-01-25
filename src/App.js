@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import {useState} from 'react';
 
 import './App.css';
 
@@ -112,7 +112,7 @@ const calculateWinner = (gameBoard, row, column) => {
 
 const GameBoard = () => {
 
-    const defaultPlayer = 'x';
+    const defaultPlayer = 'X';
     const freshBoard = {
         0: {
             0: '',
@@ -150,7 +150,7 @@ const GameBoard = () => {
         setTurnNumber(turnNumber + 1);
         if (turnNumber === 9 && !gameWinner) setWinner('NOBODY');
 
-        setActivePlayer(activePlayer === 'x' ? 'o' : 'x');
+        setActivePlayer(activePlayer === 'X' ? 'O' : 'X');
     }
 
     const ResetGameBoard = () => {
@@ -173,10 +173,15 @@ const GameBoard = () => {
         }
 
         return <table>
-            {rows.map((row, x) => {
+            {rows.map((row) => {
                 return <tr>
                     {row.map((cell, j) => {
-                        return <td key={j} style={{'listStyle': 'none', border: '1px solid', lineHeight: '13px'}}>{cell}</td>
+                        return <td
+                            key={j}
+                            style={{border: '1px solid', lineHeight: '13px', textAlign: 'center', padding: '2px'}}
+                        >
+                            {cell}
+                        </td>
                     })}
                 </tr>
             })}
@@ -191,8 +196,10 @@ const GameBoard = () => {
                 </div>
                 <div className="card-body">
                     <h5 className="card-title">Player X</h5>
-                    <p>Win Percentage X: {history.length && parseInt(history.filter(n => n.winner === 'x').length / history.length * 100, 10) + '%'}</p>
-                    <p>Win Percentage O: {history.length && parseInt(history.filter(n => n.winner === 'o').length / history.length * 100, 10) + '%'}</p>
+                    <p>Win Percentage
+                        X: {history.length && parseInt(history.filter(n => n.winner === 'X').length / history.length * 100, 10) + '%'}</p>
+                    <p>Win Percentage
+                        O: {history.length && parseInt(history.filter(n => n.winner === 'O').length / history.length * 100, 10) + '%'}</p>
                 </div>
             </div>
         </div>
@@ -200,22 +207,22 @@ const GameBoard = () => {
             <div id={"gameboard"}>
                 <div className={'text-center'}>
                     {theWinner
-                     ? <p><strong>{theWinner.toUpperCase()}</strong> wins!</p>
-                     : <p>Who's turn is it? <strong>{activePlayer.toUpperCase()}!</strong></p>
+                        ? <p><strong>{theWinner}</strong> wins!</p>
+                        : <p>Who's turn is it? <strong>{activePlayer}!</strong></p>
                     }
                 </div>
-                <div className={"text-center mt-5"}>
+                <div className={"text-center mt-3"}>
                     {[...Array(3)].map((x, row) =>
-                        <div key={row}>
+                        <div className={"mb-2"} key={row}>
                             {[...Array(3)].map((n, column) =>
                                 <button
                                     id={`${row}-${column}`}
                                     onClick={() => buttonClicked([row, column])}
                                     key={row + column}
-                                    className={"mx-2 mb-2"}
+                                    className={"mx-2"}
                                     disabled={moves[row] && moves[row][column]}
                                 >
-                                    {moves[row] && moves[row][column] ? moves[row][column] : '•'}
+                                    {moves[row] && moves[row][column] ? moves[row][column] : '◇'}
                                 </button>
                             )}
                         </div>
@@ -233,8 +240,8 @@ const GameBoard = () => {
                 </div>
                 <div className="card-body">
                     {history.map((result, i) => {
-                        return <div key={i}>
-                            <h5 className="card-title">Game {i + 1} - Winner {result.winner.toUpperCase()}</h5>
+                        return <div key={i} className={"mt-3"}>
+                            <h5 className="card-title">Game {i + 1} - Winner {result.winner}</h5>
                             <HistoryBoard board={result.board}/>
                         </div>
                     })}

@@ -1,11 +1,10 @@
 #gameboard {
     font-size: 50px;
-    line-height: 50px;
 }
 
 #gameboard button {
     border-radius: 5px;
     width: 75px;
-    font-size: 75px;
+    font-size: 60px;
     line-height: 75px;
 }
