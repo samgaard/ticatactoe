@@ -167,6 +167,19 @@ const GameBoard = () => {
         setWinningSquares();
     };
 
+    const winningButtonCheck = (squares, row, column) => {
+        if (!squares) return '';
+
+        for (let i = 0; i < 3; i++) {
+            const [winningRow, winningColumn] = squares[i];
+            if (row === winningRow && column === winningColumn) {
+                return ' winning-square';
+            }
+        }
+
+        return '';
+    };
+
     const GameBoardButtons = () => {
         return <>
             {[...Array(3)].map((x, row) =>
@@ -176,7 +189,7 @@ const GameBoard = () => {
                             id={`${row}-${column}`}
                             onClick={() => buttonClicked(row, column)}
                             key={row + column}
-                            className={"mx-2"}
+                            className={"mx-2" + winningButtonCheck(winningSquares, row, column)}
                             disabled={moves[row] && moves[row][column]}
                         >
                             {moves[row] && moves[row][column] ? moves[row][column] : '◇'}
@@ -187,7 +200,7 @@ const GameBoard = () => {
         </>;
     }
 
-    const HistoryBoard = ({board}) => {
+    const HistoryBoard = ({board, squares}) => {
         let rows = [];
         for (let i = 0; i < 3; i++) {
             let cells = [];
@@ -202,7 +215,7 @@ const GameBoard = () => {
             {rows.map((row, i) => {
                 return <tr key={i}>
                     {row.map((cell, j) => {
-                        return <td key={j} className={'history-cell'}>{cell}</td>
+                        return <td key={j} className={'history-cell' + winningButtonCheck(squares, i, j)}>{cell}</td>
                     })}
                 </tr>
             })}
@@ -254,7 +267,7 @@ const GameBoard = () => {
                     {history.map((result, i) => {
                         return <div key={i} className={"mt-3"}>
                             <h5 className="card-title">Game {i + 1} - Winner {result.winningLetter}</h5>
-                            <HistoryBoard board={result.board}/>
+                            <HistoryBoard board={result.board} squares={result.winningSquares}/>
                         </div>
                     })}
                 </div>
