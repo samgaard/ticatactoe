@@ -196,12 +196,7 @@ const GameBoard = () => {
             {rows.map((row) => {
                 return <tr>
                     {row.map((cell, j) => {
-                        return <td
-                            key={j}
-                            style={{border: '1px solid', lineHeight: '13px', textAlign: 'center', padding: '2px'}}
-                        >
-                            {cell}
-                        </td>
+                        return <td key={j} className={'history-cell'}>{cell}</td>
                     })}
                 </tr>
             })}

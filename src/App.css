@@ -8,3 +8,10 @@
     font-size: 60px;
     line-height: 75px;
 }
+
+.history-cell {
+    border: 1px solid;
+    line-height: 13px;
+    text-align: center;
+    padding: 2px;
+}
