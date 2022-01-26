@@ -133,33 +133,38 @@ const GameBoard = () => {
 
     const [moves, setMoves] = useState(Object.assign({}, freshBoard));
     const [activePlayer, setActivePlayer] = useState(defaultPlayer);
-    const [theWinner, setWinner] = useState();
+    const [winningLetter, setWinningLetter] = useState();
+    const [winningSquares, setWinningSquares] = useState();
     const [turnNumber, setTurnNumber] = useState(1);
     const [history, setHistory] = useState([]);
 
 
-    const buttonClicked = ([row, column]) => {
+    const buttonClicked = (row, column) => {
         if (moves[row][column] !== '') return;
         let updatedMoves = Object.assign({}, moves);
         updatedMoves[row][column] = activePlayer;
         setMoves(updatedMoves);
 
         const gameWinner = calculateWinner(moves, row, column);
-        if (gameWinner) setWinner(gameWinner.letter);
+        if (gameWinner) {
+            setWinningLetter(gameWinner.letter);
+            setWinningSquares(gameWinner.squares);
+        }
 
         setTurnNumber(turnNumber + 1);
-        if (turnNumber === 9 && !gameWinner) setWinner('NOBODY');
+        if (turnNumber === 9 && !winningLetter) setWinningLetter('NOBODY');
 
         setActivePlayer(activePlayer === 'X' ? 'O' : 'X');
     }
 
     const ResetGameBoard = () => {
-        setHistory(history => [...history, {winner: theWinner, board: moves}]);
+        setHistory(history => [...history, {winningLetter, board: moves, winningSquares}]);
 
         setMoves(Object.assign({}, freshBoard));
         setActivePlayer(defaultPlayer);
         setTurnNumber(1);
-        setWinner();
+        setWinningLetter();
+        setWinningSquares();
     };
 
     const GameBoardButtons = () => {
@@ -169,7 +174,7 @@ const GameBoard = () => {
                     {[...Array(3)].map((n, column) =>
                         <button
                             id={`${row}-${column}`}
-                            onClick={() => buttonClicked([row, column])}
+                            onClick={() => buttonClicked(row, column)}
                             key={row + column}
                             className={"mx-2"}
                             disabled={moves[row] && moves[row][column]}
@@ -213,17 +218,17 @@ const GameBoard = () => {
                 <div className="card-body">
                     <h5 className="card-title">Win Percentage</h5>
                     <p>X: {history.length &&
-                    parseInt(history.filter(n => n.winner === 'X').length / history.length * 100, 10) + '%'}</p>
+                    parseInt(history.filter(n => n.winningLetter === 'X').length / history.length * 100, 10) + '%'}</p>
                     <p>O: {history.length &&
-                    parseInt(history.filter(n => n.winner === 'O').length / history.length * 100, 10) + '%'}</p>
+                    parseInt(history.filter(n => n.winningLetter === 'O').length / history.length * 100, 10) + '%'}</p>
                 </div>
             </div>}
         </div>
         <div className={'col-sm-12 col-md-4'}>
             <div id={"gameboard"}>
                 <div className={'text-center'}>
-                    {theWinner
-                     ? <p><strong>{theWinner}</strong> wins!</p>
+                    {winningLetter
+                     ? <p><strong>{winningLetter}</strong> wins!</p>
                      : <p>Who's turn is it? <strong>{activePlayer}!</strong></p>
                     }
                 </div>
@@ -232,7 +237,7 @@ const GameBoard = () => {
                 </div>
             </div>
 
-            {theWinner &&
+            {winningLetter &&
             <div className={'text-center'}>
                 <button className="btn btn-primary" onClick={ResetGameBoard}>Reset</button>
             </div>}
@@ -246,7 +251,7 @@ const GameBoard = () => {
                 <div className="card-body">
                     {history.map((result, i) => {
                         return <div key={i} className={"mt-3"}>
-                            <h5 className="card-title">Game {i + 1} - Winner {result.winner}</h5>
+                            <h5 className="card-title">Game {i + 1} - Winner {result.winningLetter}</h5>
                             <HistoryBoard board={result.board}/>
                         </div>
                     })}
