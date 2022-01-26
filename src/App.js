@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useState } from 'react';
 
 import './App.css';
 
@@ -162,6 +162,26 @@ const GameBoard = () => {
         setWinner();
     };
 
+    const GameBoardButtons = () => {
+        return <>
+            {[...Array(3)].map((x, row) =>
+                <div className={"mb-2"} key={row}>
+                    {[...Array(3)].map((n, column) =>
+                        <button
+                            id={`${row}-${column}`}
+                            onClick={() => buttonClicked([row, column])}
+                            key={row + column}
+                            className={"mx-2"}
+                            disabled={moves[row] && moves[row][column]}
+                        >
+                            {moves[row] && moves[row][column] ? moves[row][column] : '◇'}
+                        </button>
+                    )}
+                </div>
+            )}
+        </>;
+    }
+
     const HistoryBoard = ({board}) => {
         let rows = [];
         for (let i = 0; i < 3; i++) {
@@ -190,6 +210,7 @@ const GameBoard = () => {
 
     return <div className={'row mt-5'}>
         <div className={'col-sm-12 col-md-4'}>
+            {history.length > 0 &&
             <div className="card mx-5">
                 <div className="card-header">
                     Stats
@@ -197,43 +218,32 @@ const GameBoard = () => {
                 <div className="card-body">
                     <h5 className="card-title">Win Percentage</h5>
                     <p>X: {history.length &&
-                        parseInt(history.filter(n => n.winner === 'X').length / history.length * 100, 10) + '%'}</p>
+                    parseInt(history.filter(n => n.winner === 'X').length / history.length * 100, 10) + '%'}</p>
                     <p>O: {history.length &&
-                        parseInt(history.filter(n => n.winner === 'O').length / history.length * 100, 10) + '%'}</p>
+                    parseInt(history.filter(n => n.winner === 'O').length / history.length * 100, 10) + '%'}</p>
                 </div>
-            </div>
+            </div>}
         </div>
         <div className={'col-sm-12 col-md-4'}>
             <div id={"gameboard"}>
                 <div className={'text-center'}>
                     {theWinner
-                        ? <p><strong>{theWinner}</strong> wins!</p>
-                        : <p>Who's turn is it? <strong>{activePlayer}!</strong></p>
+                     ? <p><strong>{theWinner}</strong> wins!</p>
+                     : <p>Who's turn is it? <strong>{activePlayer}!</strong></p>
                     }
                 </div>
                 <div className={"text-center mt-3"}>
-                    {[...Array(3)].map((x, row) =>
-                        <div className={"mb-2"} key={row}>
-                            {[...Array(3)].map((n, column) =>
-                                <button
-                                    id={`${row}-${column}`}
-                                    onClick={() => buttonClicked([row, column])}
-                                    key={row + column}
-                                    className={"mx-2"}
-                                    disabled={moves[row] && moves[row][column]}
-                                >
-                                    {moves[row] && moves[row][column] ? moves[row][column] : '◇'}
-                                </button>
-                            )}
-                        </div>
-                    )}
+                    <GameBoardButtons/>
                 </div>
             </div>
+
+            {theWinner &&
             <div className={'text-center'}>
-                {theWinner && <button className="btn btn-primary" onClick={ResetGameBoard}>Reset</button>}
-            </div>
+                <button className="btn btn-primary" onClick={ResetGameBoard}>Reset</button>
+            </div>}
         </div>
         <div className={'col-sm-12 col-md-4'}>
+            {history.length > 0 &&
             <div className="card mx-5">
                 <div className="card-header">
                     History
@@ -246,8 +256,7 @@ const GameBoard = () => {
                         </div>
                     })}
                 </div>
-            </div>
-
+            </div>}
         </div>
     </div>;
 };
